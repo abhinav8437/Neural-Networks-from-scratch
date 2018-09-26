@@ -14,7 +14,7 @@ train_data = train_file.readlines()
 test_file = open(paths.test_set)
 test_data = test_file.readlines()
 
-class neural_net_with_1_hidden_layer:
+class neural_net_with_2_hidden_layer:
     def __init__(self,file,activation_function,loss_function,num_of_units,bias):
         self.file = file
         self.costt = None
@@ -80,7 +80,7 @@ class neural_net_with_1_hidden_layer:
         grad = (-1)*np.dot(X_train.T,np.multiply(np.dot(np.multiply((np.dot(dz3, weights3)), dz2),weights2),dz1))
         return grad
 
-    def fit(self, epochs,batch_size):
+    def fit(self, epochs,batch_size,lr):
         X_train, Y = self.load_data(self.file)
         weights1 = np.random.randn(X_train.shape[1],self.units_in_layer_1)*np.sqrt(1/X_train.shape[1])
         weights2 = np.random.randn(self.units_in_layer_1,self.units_in_layer_2)*np.sqrt(1/self.units_in_layer_1)
@@ -126,8 +126,8 @@ class neural_net_with_1_hidden_layer:
                     dz1 = relu.derivative_relu_output(z1)
                     dz2 = relu.derivative_relu_output(z2)
 
-                alpha = (1/(1+1*epochs))*0.0001
-                # alpha = 0.0001
+                alpha = (1/(1+1*epochs))*lr
+                # alpha = lr
 
                 weights3 = weights3 - alpha * (self.gradient_descent(dz3,predicted_hidden_layer_2,self.vdw_output))
 
@@ -151,9 +151,9 @@ class neural_net_with_1_hidden_layer:
 
 
 
-obj = neural_net_with_1_hidden_layer(train_data,activation_function = "relu",loss_function="mean_square_error",num_of_units = [100,90],bias=0.9)
+obj = neural_net_with_2_hidden_layer(train_data,activation_function = "relu",loss_function="mean_square_error",num_of_units = [100,90],bias=0.9)
 time1 = time.time()
-obj.fit(epochs=5,batch_size = 500)
+obj.fit(epochs=5,batch_size = 500,lr = 0.001)
 time2 = time.time()
 print ("total time took in training=====>>",time2-time1)
 #TEST_SET
@@ -163,7 +163,6 @@ output_Y_of_all_data = one_hot.fit_transform(np.array(Y).reshape(len(Y),1))
 costt = obj.costt
 actual_Y = [int(i) for i in Y]
 predicted_Y = obj.predict(test_data)
-print (set(predicted_Y))
 print (accuracy_score(actual_Y,predicted_Y))
 
 

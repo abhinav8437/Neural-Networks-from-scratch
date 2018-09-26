@@ -57,13 +57,15 @@ class neural_net_with_1_hidden_layer:
         return np.sum(log)/predicted_Y_of_all_data.shape[0]
 
     def gradient_descent(self, dz2, predicted_hidden_layer,weights,batch_size,lambdaa,vdw):
-        grad = (-1)*(np.dot(predicted_hidden_layer.T,dz2))# + lambdaa*weights/batch_size
+        #adding Regularization term
+        grad = (-1)*(np.dot(predicted_hidden_layer.T,dz2)) + lambdaa*weights/batch_size
         vdw1 = self.bias*vdw + (1-self.bias)*grad
         self.vdw_output = vdw1
         return grad
 #
     def gradient_descent1(self, dz2, dz1, X, weights2,weights,batch_size,lambdaa,vdw):
-        grad = (-1)*np.dot(X.T, np.multiply((np.dot(dz2, weights2)), dz1))# + lambdaa*weights/batch_size
+        #adding regularization term
+        grad = (-1)*np.dot(X.T, np.multiply((np.dot(dz2, weights2)), dz1)) + lambdaa*weights/batch_size
         vdw1 = self.bias * vdw + (1 - self.bias) * grad
         self.vdw_hidden = vdw1
         return grad
@@ -71,7 +73,7 @@ class neural_net_with_1_hidden_layer:
     def get_batches(self, inputs):
         return np.array(pd.DataFrame(inputs).sample(500))
 
-    def fit(self, epochs,batch_size,lambdaa):
+    def fit(self, epochs,batch_size,lambdaa,lr):
         X_train, Y = self.load_data(self.file)
         weights1 = np.random.randn(X_train.shape[1],self.num_of_units)*np.sqrt(1/X_train.shape[1])
         weights2 = np.random.randn(self.num_of_units,len(set(Y)))*np.sqrt(1/self.num_of_units)
@@ -90,10 +92,15 @@ class neural_net_with_1_hidden_layer:
                 print (cost)
                 z1 = np.dot(X_train_batch, weights1)
                 z2 = np.dot(predicted_hidden_layer,weights2)
-                #CROSS ENTROPY
-                # dz2 = np.multiply(output_Y_of_all_data.todense(), softmax.derivative_of_softmax_output(z2))
-                #MEAN SQUARE ERROR
-                dz2 = np.multiply((output_Y_of_all_data_batch - predicted_Y),(1-predicted_Y))
+
+                if (self.loss_function=="mean_square_error"):
+                    dz2 = np.multiply((output_Y_of_all_data_batch - predicted_Y),(1-predicted_Y))
+
+                elif(self.loss_function=="cross_entropy"):
+                    dz2 = np.multiply(output_Y_of_all_data_batch.todense(), softmax.derivative_of_softmax_output(z2))
+
+                else:
+                    print ("WRITE CORRECT LOSS FUNCTION")
 
                 if (self.activation_function == "sigmoid"):
                     dz1 = sigmoid.derivative_of_sigmoid(z1)
@@ -102,9 +109,9 @@ class neural_net_with_1_hidden_layer:
                 if (self.activation_function=='relu'):
                     dz1 = relu.derivative_relu_output(z1)
 
-                # alpha = (1/(1+1*epochs))*0.01
-                alpha = 0.0001
-
+                # alpha = (1/(1+1*epochs))*lr
+                alpha = lr
+                #WEIGHTS UPDATED USING MINI BATCH GRADIENT DESCENT WITH MOMENTUM - 0.9
                 weights2 = weights2 - alpha * (self.gradient_descent(dz2,predicted_hidden_layer,weights2,batch_size,lambdaa,self.vdw_output))
                 weights1 = weights1 - alpha * (self.gradient_descent1(dz2,dz1,X_train_batch,weights2.T,weights1,batch_size,lambdaa,self.vdw_hidden))
                 # print (weights2)
@@ -125,7 +132,8 @@ class neural_net_with_1_hidden_layer:
 
 
 obj = neural_net_with_1_hidden_layer(train_data,activation_function = "tanh",loss_function="mean_square_error",num_of_units = 100,momentum=0.9)
-obj.fit(epochs=50,batch_size = 500,lambdaa=1000)
+obj.fit(epochs=50,batch_size = 500,lambdaa=0.2,lr = 0.001)
+#lambdaa is hyperparamter of regularization term added
 #TEST_SET
 X, Y = obj.load_data(test_data)
 one_hot = OneHotEncoder()
@@ -133,5 +141,4 @@ output_Y_of_all_data = one_hot.fit_transform(np.array(Y).reshape(len(Y),1))
 costt = obj.costt
 actual_Y = [int(i) for i in Y]
 predicted_Y = obj.predict(test_data)
-print (set(predicted_Y))
 print (accuracy_score(actual_Y,predicted_Y))
