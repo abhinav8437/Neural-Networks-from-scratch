@@ -1,8 +1,12 @@
 # Neural-Networks-from-scratch
 Dependencies
+
 Numpy
+
 Pandas
+
 Seaborn - plot cost function of every iteration
+
 Sklearn - for OneHotEncoder and Accuracy score
 
 neural_net_1_layer and neural_net_2_layer are working
