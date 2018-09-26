@@ -29,6 +29,10 @@ Trying on MNIST dataset -
 Predict Handwritten images of numbers.
 Highest accuracy achieved after tweaking some hyperparameters
 
-Achieved 83% accuracy with NO HIDDEN LAYER
+Achieved-
+
+83% accuracy with NO HIDDEN LAYER
+
 91% accuracy with 1 HIDDEN LAYER
+
 93% accuracy with 2 HIDDEN LAYER
