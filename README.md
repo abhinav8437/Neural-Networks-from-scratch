@@ -1,5 +1,5 @@
 # Neural-Networks-from-scratch
-Dependencies -
+Dependencies
 Numpy
 Pandas
 Seaborn - plot cost function of every iteration
