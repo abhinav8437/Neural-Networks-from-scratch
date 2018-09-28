@@ -25,9 +25,16 @@ currently I am working on Generalised Neural net,in this this code will work on 
 You have to give a list of number of layers, number of units in each layer and till now it is
 initializing the weights, doing 1 forward pass but yet have to get the generalised way to calculate gradient descent(Back-Propagation)
 
-Tried on MNIST dataset -
-Predict Handwritten images of numbers.
+
+On Cifar10 dataset - 
 Highest accuracy achieved after tweaking some hyperparameters
+
+90% accuracy with 2 HIDDEN LAYER
+
+89% accuracy with 1 HIDDEN LAYER
+
+
+On MNIST dataset -
 
 Achieved-
 
