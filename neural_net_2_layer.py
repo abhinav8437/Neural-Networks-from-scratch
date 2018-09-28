@@ -126,8 +126,8 @@ class neural_net_with_2_hidden_layer:
                     dz1 = relu.derivative_relu_output(z1)
                     dz2 = relu.derivative_relu_output(z2)
 
-                alpha = (1/(1+1*epochs))*lr
-                # alpha = lr
+                # alpha = (1/(1+1*epochs))*lr
+                alpha = lr
 
                 weights3 = weights3 - alpha * (self.gradient_descent(dz3,predicted_hidden_layer_2,self.vdw_output))
 
@@ -151,9 +151,9 @@ class neural_net_with_2_hidden_layer:
 
 
 
-obj = neural_net_with_2_hidden_layer(train_data,activation_function = "relu",loss_function="mean_square_error",num_of_units = [100,90],bias=0.9)
+obj = neural_net_with_2_hidden_layer(train_data,activation_function = "tanh",loss_function="mean_square_error",num_of_units = [100,90],bias=0.9)
 time1 = time.time()
-obj.fit(epochs=5,batch_size = 500,lr = 0.001)
+obj.fit(epochs=20,batch_size = 500,lr = 0.00001)
 time2 = time.time()
 print ("total time took in training=====>>",time2-time1)
 #TEST_SET

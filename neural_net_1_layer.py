@@ -21,6 +21,7 @@ class neural_net_with_1_hidden_layer:
         self.weights2 = None
         self.activation_function = activation_function
         self.num_of_units = num_of_units
+        self.loss_function = loss_function
         self.bias = momentum
         self.vdw_output = 0
         self.vdw_hidden = 0
@@ -29,12 +30,17 @@ class neural_net_with_1_hidden_layer:
         X = []
         Y = []
         for line in range(len(file)):
-            split_line = file[line].split(',')
-            label = split_line[-1]
-            dimension = [float(i) for i in split_line[:-1]]
-            Y.append(label[0])
-            X.append(dimension)
-        return np.array(X), Y
+            # split_line = file[line].split(',')
+            # label = split_line[-1]
+            label = file[line].split(",")[0]
+            # x = [float(i) for i in split_line[:-1]]
+            x = file[line].split(",")[1:]
+            x = [int(i) for i in x]
+            # Y.append(label[0])
+            Y.append(label)
+            X.append(x)
+        return np.array(X)/255., Y
+
 
     def predict_layer(self, layer, weights):
         predicted_Y_of_all_data = np.dot(layer, weights)
@@ -132,7 +138,7 @@ class neural_net_with_1_hidden_layer:
 
 
 obj = neural_net_with_1_hidden_layer(train_data,activation_function = "tanh",loss_function="mean_square_error",num_of_units = 100,momentum=0.9)
-obj.fit(epochs=50,batch_size = 500,lambdaa=0.2,lr = 0.001)
+obj.fit(epochs=6,batch_size = 500,lambdaa=0.2,lr = 0.0001)
 #lambdaa is hyperparamter of regularization term added
 #TEST_SET
 X, Y = obj.load_data(test_data)
