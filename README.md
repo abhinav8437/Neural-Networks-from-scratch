@@ -19,13 +19,13 @@ To fit, these are the arguments -
 epochs, Batch size, Learning Rate
 Using learning rate decay to optimize gradient descent.
 
-It is highly probable to get Nan values after some epochs.
+It is highly probable to get Nan values after some epochs, ie vanishing gradients.
 
 currently I am working on Generalised Neural net,in this this code will work on N number of layers.
 You have to give a list of number of layers, number of units in each layer and till now it is
 initializing the weights, doing 1 forward pass but yet have to get the generalised way to calculate gradient descent(Back-Propagation)
 
-Trying on MNIST dataset -
+Tried on MNIST dataset -
 Predict Handwritten images of numbers.
 Highest accuracy achieved after tweaking some hyperparameters
 
